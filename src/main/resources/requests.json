@@ -1,0 +1,18 @@
+{
+  "GET /models": {
+    "url": "http://52.178.99.184/mdm/rest/",
+    "request": "{\"CatalogRequest\": {\"Endpoint\": \"lukoil\", \"Originator\": \"test\", \"Code\": \"Refinery\"}}"
+  },
+  "GET /models/{id}/objects": {
+    "url": "http://52.178.99.184/mdm/rest/",
+    "request": "{\"CatalogRequest\": {\"Endpoint\": \"lukoil\",\"Originator\": \"test\",\"ObjectType\": [{\"Code\": \"FunctionalLocation\"}],\"FilterGroup\": [{\"Operation\": \"and\",\"Filter\": [{\"Attribute\": \"isPartOf\",\"Value\": \"PNOS\",\"Comparison\": \"equal\"}]}]}}"
+  },
+  "GET /models/{id}/objects/{objid}/objects": {
+    "url": "http://52.178.99.184/mdm/rest/",
+    "request": "{\"CatalogRequest\": {\"Endpoint\": \"lukoil\",\"Originator\": \"test\",\"ObjectType\": [{\"Code\": \"FunctionalLocation\"}],\"FilterGroup\": [{\"Operation\": \"and\",\"Filter\": [{\"Attribute\": \"isPartOf\",\"Value\": \"<<<id>>>\",\"Comparison\": \"equal\"}]}]}}"
+  },
+  "GET /objects/{id}": {
+    "url": "http://52.178.99.184/mdm/rest/",
+    "request": "{\"EntityRequest\":{\"Endpoint\":\"lukoil\", \"Originator\":\"test\", \"Code\":\"<<<id>>>\"}}"
+  }
+}

@@ -1,0 +1,47 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'com.zyfra'
+version = '0.1'
+sourceCompatibility = '1.8'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+	/////mavenCentral()
+	maven {
+		name "nexus"
+		url "http://nexus2.zyfra.com/repository/maven-public/"
+	}
+}
+
+dependencies {
+
+	implementation ('com.zyfra:spring-runtime-exceptions:1.4-SNAPSHOT')
+	implementation ('com.zyfra:mdm-integration:1.0.1-SNAPSHOT')
+
+	compile 'com.zyfra:spring-security:1.0-SNAPSHOT'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	compile "io.springfox:springfox-swagger2:2.9.2"
+	compile "io.springfox:springfox-swagger-ui:2.9.2"
+	compile "com.github.joschi.jackson:jackson-datatype-threetenbp:2.6.4"
+
+	compile group: 'org.springframework.data', name: 'spring-data-commons', version: '2.2.1.RELEASE'
+	
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	useJUnitPlatform()
+}

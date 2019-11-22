@@ -1,0 +1,15 @@
+{
+  "Model": {
+    "jsonPathItems": "$.Package.Item[*]",
+    "jsonPathInItemForName": "$.Name",
+    "jsonPathInItemForId": "$.Code",
+    "jsonPathInItemForDescription": "$.Name"
+  },
+  "Object": {
+    "jsonPathItems": "$.Package.Item[*]",
+    "jsonPathInItemForName": "$.Name",
+    "jsonPathInItemForId": "$.Code",
+    "jsonPathInItemForDescription": "$.Name",
+    "jsonPathInItemForParentId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value"
+  }
+}

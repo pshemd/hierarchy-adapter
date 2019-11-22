@@ -1,0 +1,41 @@
+springfox:
+  documentation:
+    swagger.v2.path: "/api-docs"
+
+swagger-ui:
+  auth-server-url: "${AUTH_SERVER_URL:http://192.168.100.56:8080/auth}"
+  realm: "${REALM:master}"
+  client: "${CLIENT:portal}"
+  credentials:
+    secret: "portal"
+
+spring:
+  data:
+    web:
+      pageable:
+        default-page-size: 1000
+
+httpservice:
+  objects:
+    uri:  "${OBJECTS_SERVICE_URI:http://localhost:8089/restapi}"
+  events:
+    uri:  "${EVENTS_SERVICE_URI:http://localhost:8085/restapi}"
+
+server:
+  port: ${LOCAL_PORT:8097}
+  servlet:
+    context-path: "/restapi"
+
+security:
+  resource-id: "mdm-objects.application"
+  oauth2:
+    client:
+      clientId: ${OAUTH2-CLIENT-ID:om-service}
+      clientSecret: ${OAUTH2-CLIENT-SECRET:c95911b2-d350-44e1-aab6-b3eacd46833b}
+      grantType: client_credentials
+      accessTokenUri: ${OAUTH2-CLIENT-TOKEN-URI:http://192.168.100.56:8080/auth/realms/master/protocol/openid-connect/token}
+    resource:
+      userInfoUri: https://localhost:8443/cas/oauth2.0/profile
+      preferTokenInfo: false
+      jwk:
+        key-set-uri: ${JWKS_URL:http://192.168.100.56:8080/auth/realms/master/protocol/openid-connect/certs}

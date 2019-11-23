@@ -36,7 +36,6 @@ public interface ObjectsApi {
             @ApiResponse(code = 401, message = "Неавторизованный доступ."),
             @ApiResponse(code = 500, message = "Не удалось получить все модели.")})
     @RequestMapping(value = "/models",
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     CompletionStage<Page<Model>> getModels(@ApiIgnore @Valid Pageable pageable
             , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts);
@@ -58,7 +57,6 @@ public interface ObjectsApi {
             @ApiResponse(code = 401, message = "Неавторизованный доступ."),
             @ApiResponse(code = 500, message = "Не удалось получить все корневые объекты модели.")})
     @RequestMapping(value = "/models/{id}/objects",
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     CompletionStage<Page<Object_>> getObjects(@ApiParam(value = "id модели", required = true) @Valid @PathVariable("id") String modelId
             , @ApiIgnore @Valid Pageable pageable
@@ -81,7 +79,6 @@ public interface ObjectsApi {
             @ApiResponse(code = 401, message = "Неавторизованный доступ."),
             @ApiResponse(code = 500, message = "Не удалось получить все дочерние объекты указанного объекта.")})
     @RequestMapping(value = "/models/{id}/objects/{objid}/objects",
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     CompletionStage<Page<Object_>> getObjectTree(@ApiParam(value = "id модели", required = true) @Valid @PathVariable("id") String modelId
             , @ApiParam(value = "id объекта модели", required = true) @PathVariable("objid") String objectId
@@ -98,7 +95,7 @@ public interface ObjectsApi {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "BadRequest"),
             @ApiResponse(code = 404, message = "NotFound")})
-    @RequestMapping(value = "/objects/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(value = "/objects/{id}", method = RequestMethod.GET)
     CompletionStage<Object_> getObject(
             @ApiParam(value = "id объекта", required = true) @PathVariable("id") String objectId,
             @ApiParam(value = "ts") @RequestParam(value = "ts", required = false) Timestamp ts);

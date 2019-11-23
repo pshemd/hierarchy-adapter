@@ -1,15 +1,16 @@
 {
   "Model": {
     "jsonPathItems": "$.Package.Item[*]",
-    "jsonPathInItemForName": "$.Name",
-    "jsonPathInItemForId": "$.Code",
-    "jsonPathInItemForDescription": "$.Name"
+    "id": "$.Code",
+    "name": "$.Name",
+    "description": "$.Name"
   },
   "Object": {
     "jsonPathItems": "$.Package.Item[*]",
-    "jsonPathInItemForName": "$.Name",
-    "jsonPathInItemForId": "$.Code",
-    "jsonPathInItemForDescription": "$.Name",
-    "jsonPathInItemForParentId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value"
+    "id": "$.Code",
+    "name": "$.Name",
+    "description": "$.Name",
+    "parentId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value",
+    "modelId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value"
   }
 }

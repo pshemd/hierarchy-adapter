@@ -4,7 +4,7 @@ import com.zyfra.mdmobjectsservice.controllers.api.ObjectsApi;
 import com.zyfra.mdmobjectsservice.model.Model;
 import com.zyfra.mdmobjectsservice.model.Object_;
 import com.zyfra.mdmobjectsservice.repositories.ModelRepository;
-import com.zyfra.mdmobjectsservice.repositories.ObjectsRepositoty;
+import com.zyfra.mdmobjectsservice.repositories.ObjectsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +22,12 @@ import java.util.concurrent.CompletionStage;
 public class ObjectsController implements ObjectsApi {
 
     private ModelRepository modelRepository;
-    private ObjectsRepositoty objectsRepositoty;
+    private ObjectsRepository objectsRepository;
 
     @Autowired
-    public ObjectsController(ModelRepository modelRepository, ObjectsRepositoty objectsRepositoty) {
+    public ObjectsController(ModelRepository modelRepository, ObjectsRepository objectsRepository) {
         this.modelRepository = modelRepository;
-        this.objectsRepositoty = objectsRepositoty;
+        this.objectsRepository = objectsRepository;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ObjectsController implements ObjectsApi {
     @Override
     public CompletionStage<Page<Object_>> getObjects(@Valid String id, @Valid Pageable pageable, Boolean onlyRoot, @Valid Timestamp ts) {
 
-        return objectsRepositoty.getObjects(id, pageable, false, ts)
+        return objectsRepository.getObjects(id, pageable, false, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage());
                 });
@@ -51,7 +51,7 @@ public class ObjectsController implements ObjectsApi {
     @Override
     public CompletionStage<Page<Object_>> getObjectTree(@Valid String id, String objid, @Valid Pageable pageable, @Valid Timestamp ts) {
 
-        return objectsRepositoty.getObjectTree(id, objid, pageable, ts)
+        return objectsRepository.getObjectTree(id, objid, pageable, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage());
                 });
@@ -59,7 +59,7 @@ public class ObjectsController implements ObjectsApi {
 
     @Override
     public CompletionStage<Object_> getObject(String id, Timestamp ts) {
-        return objectsRepositoty.getObject(id, ts)
+        return objectsRepository.getObject(id, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage());
                 });

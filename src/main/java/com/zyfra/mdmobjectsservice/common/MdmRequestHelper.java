@@ -1,17 +1,19 @@
 package com.zyfra.mdmobjectsservice.common;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zyfra.mdmclient.model.ClassDescription;
+import com.zyfra.mdmclient.model.MDMConfiguration;
 import com.zyfra.mdmclient.model.SetterDescription;
 import com.zyfra.mdmobjectsservice.model.Model;
 import com.zyfra.mdmobjectsservice.model.Object_;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Map;
 
 @Component
 public class MdmRequestHelper {
@@ -22,76 +24,69 @@ public class MdmRequestHelper {
         this.objectMapper = new ObjectMapper();
     }
 
-    public Pair<String, String> getMdmConfiguration(Action action) {
+    public MDMConfiguration getMdmConfiguration(Action action) {
 
-        JsonNode rootNode;
+        var file = Paths.get("src", "main", "resources", "requests.json").toFile();
         try {
-            rootNode = objectMapper.readTree(Paths.get("src", "main", "resources", "requests.json").toFile());
-            if (rootNode != null) {
-                switch (action) {
-                    case getModels:
-                        return Pair.of(rootNode.path("GET /models").path("url").textValue(), rootNode.path("GET /models").path("request").textValue());
-                    case getObjects:
-                        return Pair.of(rootNode.path("GET /models/{id}/objects").path("url").textValue(), rootNode.path("GET /models/{id}/objects").path("request").textValue());
-                    case getObject:
-                        return Pair.of(rootNode.path("GET /objects/{id}").path("url").textValue(), rootNode.path("GET /objects/{id}").path("request").textValue());
-                    case getChildObjects:
-                        return Pair.of(rootNode.path("GET /models/{id}/objects/{objid}/objects").path("url").textValue(), rootNode.path("GET /models/{id}/objects/{objid}/objects").path("request").textValue());
-                    default:
-                        return null;
-                }
-            } else
-                throw new RuntimeException("Bad json-configuration");
+            var configurationFromFile = objectMapper.readValue(file, new TypeReference<Map<String, MDMConfiguration>>() {
+            });
+            switch (action) {
+                case getModels:
+                    return configurationFromFile.get("GET /models");
+                case getObjects:
+                    return configurationFromFile.get("GET /models/{id}/objects");
+                case getChildObjects:
+                    return configurationFromFile.get("GET /models/{id}/objects/{objid}/objects");
+                case getObject:
+                    return configurationFromFile.get("GET /objects/{id}");
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
+        return null;
     }
 
-    public ClassDescription getMapping (Class clazz) {
+    public ClassDescription getMapping(Class clazz) {
 
-        JsonNode rootNode;
         try {
-            rootNode = objectMapper.readTree(Paths.get("src", "main", "resources", "mapping.json").toFile());
-            if (rootNode != null) {
-                if (clazz.getName().equals(Model.class.getName())) {
+            var mappingFromFile = objectMapper.readTree(Paths.get("src", "main", "resources", "mapping.json").toFile());
+            if (clazz.getName().equals(Model.class.getName())) {
 
-                    var modelNode = rootNode.path("Model");
+                var modelNode = mappingFromFile.path("Model");
 
-                    var setters = Arrays.asList(
-                            new SetterDescription().setSetterName("setId").setSetterType("java.lang.String").setJsonPath(modelNode.path("jsonPathInItemForId").textValue()),
-                            new SetterDescription().setSetterName("setName").setSetterType("java.lang.String").setJsonPath(modelNode.path("jsonPathInItemForName").textValue()),
-                            new SetterDescription().setSetterName("setDescription").setSetterType("java.lang.String").setJsonPath(modelNode.path("jsonPathInItemForDescription").textValue())
-                    );
+                var setters = Arrays.asList(
+                        new SetterDescription().setSetterName("setId").setSetterType("java.lang.String").setJsonPath(modelNode.path("id").textValue()),
+                        new SetterDescription().setSetterName("setName").setSetterType("java.lang.String").setJsonPath(modelNode.path("name").textValue()),
+                        new SetterDescription().setSetterName("setDescription").setSetterType("java.lang.String").setJsonPath(modelNode.path("description").textValue())
+                );
 
-                    var classDescription = new ClassDescription();
+                var classDescription = new ClassDescription();
 
-                    classDescription.setClassName("com.zyfra.mdmobjectsservice.model.Model");
-                    classDescription.setSetterDescriptions(setters);
-                    classDescription.setJsonPathItems(modelNode.path("jsonPathItems").textValue());
-                    return classDescription;
-                }
-                if (clazz.getName().equals(Object_.class.getName())) {
+                classDescription.setClassName("com.zyfra.mdmobjectsservice.model.Model");
+                classDescription.setSetterDescriptions(setters);
+                classDescription.setJsonPathItems(modelNode.path("jsonPathItems").textValue());
+                return classDescription;
+            }
+            if (clazz.getName().equals(Object_.class.getName())) {
 
-                    var objectNode = rootNode.path("Object");
+                var objectNode = mappingFromFile.path("Object");
 
-                    var setters = Arrays.asList(
-                            new SetterDescription().setSetterName("setId").setSetterType("java.lang.String").setJsonPath(objectNode.path("jsonPathInItemForId").textValue()),
-                            new SetterDescription().setSetterName("setName").setSetterType("java.lang.String").setJsonPath(objectNode.path("jsonPathInItemForName").textValue()),
-                            new SetterDescription().setSetterName("setDescription").setSetterType("java.lang.String").setJsonPath(objectNode.path("jsonPathInItemForDescription").textValue()),
-                            new SetterDescription().setSetterName("setParentId").setSetterType("java.lang.String").setJsonPath(objectNode.path("jsonPathInItemForParentId").textValue())
-                    );
+                var setters = Arrays.asList(
+                        new SetterDescription().setSetterName("setId").setSetterType("java.lang.String").setJsonPath(objectNode.path("id").textValue()),
+                        new SetterDescription().setSetterName("setName").setSetterType("java.lang.String").setJsonPath(objectNode.path("name").textValue()),
+                        new SetterDescription().setSetterName("setDescription").setSetterType("java.lang.String").setJsonPath(objectNode.path("description").textValue()),
+                        new SetterDescription().setSetterName("setModelId").setSetterType("java.lang.String").setJsonPath(objectNode.path("modelId").textValue()),
+                        new SetterDescription().setSetterName("setParentId").setSetterType("java.lang.String").setJsonPath(objectNode.path("parentId").textValue())
+                );
 
-                    var classDescription = new ClassDescription();
-                    classDescription.setClassName("com.zyfra.mdmobjectsservice.model.Object_");
-                    classDescription.setSetterDescriptions(setters);
-                    classDescription.setJsonPathItems(objectNode.path("jsonPathItems").textValue());
+                var classDescription = new ClassDescription();
+                classDescription.setClassName("com.zyfra.mdmobjectsservice.model.Object_");
+                classDescription.setSetterDescriptions(setters);
+                classDescription.setJsonPathItems(objectNode.path("jsonPathItems").textValue());
 
-                    return classDescription;
-                } else
-                    return null;
-
+                return classDescription;
             } else
-                throw new RuntimeException("Bad json-configuration");
+                return null;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

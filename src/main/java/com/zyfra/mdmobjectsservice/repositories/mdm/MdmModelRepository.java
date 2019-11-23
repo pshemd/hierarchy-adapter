@@ -1,6 +1,5 @@
 package com.zyfra.mdmobjectsservice.repositories.mdm;
 
-import com.zyfra.mdmclient.model.MDMConfiguration;
 import com.zyfra.mdmclient.service.MDMAdapter;
 import com.zyfra.mdmobjectsservice.common.Action;
 import com.zyfra.mdmobjectsservice.common.MdmRequestHelper;
@@ -33,14 +32,11 @@ public class MdmModelRepository implements ModelRepository {
     public CompletionStage<Page<Model>> getModels(Pageable pageable, Timestamp ts) {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getModels);
-
-        var requestConfiguration = new MDMConfiguration().setUrl(configuration.getFirst()).setRequest(configuration.getSecond());
         var parameters = new HashMap<String, Object>();
         var classDescription = requestHelper.getMapping(Model.class);
 
-        var result = mdmAdapter.<Model>call(requestConfiguration, parameters, classDescription);
-
-        return CompletableFuture.completedStage(new PageImpl<>(result));
+        return CompletableFuture.supplyAsync(() -> mdmAdapter.<Model>call(configuration, parameters, classDescription))
+                .thenApply(PageImpl::new);
     }
 
 }

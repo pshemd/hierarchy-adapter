@@ -30,10 +30,10 @@ pipeline {
             sh 'chmod +x ./gradlew'
             withSonarQubeEnv('SonarQ') {
               sh("""./gradlew build sonarqube \
-              -Dsonar.projectKey="hierarchy-adapter" \
-              -Dsonar.projectName="hierarchy-adapter" \
-              -Dsonar.projectVersion=1.0 \
-              -Dsonar.dependencyCheck.reportPath=${WORKSPACE}/dependency-check-report.xml""")
+              -Dsonar.projectKey=`printf $image_name | sed 's|.*/||'` \
+              -Dsonar.projectName=`printf $image_name | sed 's|.*/||'` \
+              -Dsonar.projectVersion=`git rev-parse --short HEAD` \
+              -Dsonar.dependencyCheck.reportPath=$WORKSPACE/dependency-check-report.xml""")
             }
           }
         }

@@ -15,12 +15,6 @@ spring:
       pageable:
         default-page-size: 1000
 
-httpservice:
-  objects:
-    uri:  "${OBJECTS_SERVICE_URI:http://localhost:8089/restapi}"
-  events:
-    uri:  "${EVENTS_SERVICE_URI:http://localhost:8085/restapi}"
-
 server:
   port: ${LOCAL_PORT:8097}
   servlet:

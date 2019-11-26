@@ -17,4 +17,4 @@ WORKDIR /opt/$APPLICATION
 
 COPY --chown=1000:1000 /build/libs/${APPLICATION}-${VERSION}.jar ./
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_APP_OPTS -jar ${APPLICATION}-${VERSION}.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar ${APPLICATION}-${VERSION}.jar"]

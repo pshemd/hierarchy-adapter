@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjects(String id, Pageable pageable, Boolean onlyRoot, Timestamp ts) {
+    public CompletionStage<Page<Object_>> getObjects(String id, Pageable pageable, Boolean onlyRoot, Timestamp ts) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getObjects);
         var parameters = new HashMap<String, Object>();
@@ -50,7 +51,7 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Pageable pageable, Timestamp ts) {
+    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Pageable pageable, Timestamp ts) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getChildObjects);
         var parameters = new HashMap<String, Object>();
@@ -71,7 +72,7 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     @Override
-    public CompletionStage<Object_> getObject(String id, Timestamp ts) {
+    public CompletionStage<Object_> getObject(String id, Timestamp ts) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getObject);
         var parameters = new HashMap<String, Object>();
@@ -90,7 +91,7 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     //поиск дочерних объектов, для заполнения поля childCount
-    private CompletionStage<Integer> getChildCount(String objId) {
+    private CompletionStage<Integer> getChildCount(String objId) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getChildObjects);
         var parameters = new HashMap<String, Object>();
@@ -103,8 +104,14 @@ public class MdmObjectRepository implements ObjectsRepository {
 
     private CompletableFuture[] setChildCount(List<Object_> objects) {
 
-        return objects.stream().map(object -> getChildCount(object.getId())
-                .thenAccept(object::setChildsCount)).toArray(CompletableFuture[]::new);
+        return objects.stream().map(object -> {
+            try {
+                return getChildCount(object.getId())
+                        .thenAccept(object::setChildsCount);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }).toArray(CompletableFuture[]::new);
     }
 
 }

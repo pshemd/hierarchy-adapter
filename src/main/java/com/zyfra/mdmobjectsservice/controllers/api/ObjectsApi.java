@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -38,7 +39,7 @@ public interface ObjectsApi {
     @RequestMapping(value = "/models",
             method = RequestMethod.GET)
     CompletionStage<Page<Model>> getModels(@ApiIgnore @Valid Pageable pageable
-            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts);
+            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 
 
     @ApiOperation(value = "Получить страницу всех объектов модели", nickname = "getObjects", notes = "", tags = {"objects",}, authorizations = {
@@ -61,7 +62,7 @@ public interface ObjectsApi {
     CompletionStage<Page<Object_>> getObjects(@ApiParam(value = "id модели", required = true) @Valid @PathVariable("id") String modelId
             , @ApiIgnore @Valid Pageable pageable
             , @ApiParam(value = "Признак получения только корневых элементов", required = false, defaultValue = "true") @RequestParam(value = "onlyRoot", required = false, defaultValue = "true") Boolean onlyRoot
-            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts);
+            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 
     @ApiOperation(value = "Получить страницу всех дочерних объектов указанного объекта модели", nickname = "getObjectTree", notes = "", tags = {"objects",}, authorizations = {
             @Authorization(value = "oauth2", scopes = {
@@ -83,7 +84,7 @@ public interface ObjectsApi {
     CompletionStage<Page<Object_>> getObjectTree(@ApiParam(value = "id модели", required = true) @Valid @PathVariable("id") String modelId
             , @ApiParam(value = "id объекта модели", required = true) @PathVariable("objid") String objectId
             , @ApiIgnore @Valid Pageable pageable
-            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts);
+            , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 
     @ApiOperation(value = "Получить объект", nickname = "getObject", tags = {"objects"}, authorizations = {
             @Authorization(value = "oauth2", scopes = {
@@ -98,6 +99,6 @@ public interface ObjectsApi {
     @RequestMapping(value = "/objects/{id}", method = RequestMethod.GET)
     CompletionStage<Object_> getObject(
             @ApiParam(value = "id объекта", required = true) @PathVariable("id") String objectId,
-            @ApiParam(value = "ts") @RequestParam(value = "ts", required = false) Timestamp ts);
+            @ApiParam(value = "ts") @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 
 }

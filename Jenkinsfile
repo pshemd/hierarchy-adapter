@@ -30,26 +30,36 @@ pipeline {
             sh 'chmod +x ./gradlew'
             withSonarQubeEnv('SonarQ') {
               sh("""./gradlew build sonarqube \
-              -Dsonar.projectKey=`printf $image_name | sed 's|.*/||'` \
-              -Dsonar.projectName=`printf $image_name | sed 's|.*/||'` \
-              -Dsonar.projectVersion=`git rev-parse --short HEAD` \
-              -Dsonar.dependencyCheck.reportPath=$WORKSPACE/dependency-check-report.xml""")
+                    -Dsonar.projectKey=`printf $image_name | sed 's|.*/||'` \
+                    -Dsonar.projectName=`printf $image_name | sed 's|.*/||'` \
+                    -Dsonar.projectVersion=`git rev-parse --short HEAD` \
+                    -Dsonar.dependencyCheck.reportPath=$WORKSPACE/dependency-check-report.xml""")
             }
           }
         }
       }
     }
-    stage('Deploy') {
-      when { anyOf { branch 'master'; buildingTag() } }
+    stage('Build docker image and push') {
       steps {
         script {
-          tag = sh(returnStdout: true, script: 'git tag --points-at $(git rev-parse HEAD)').trim()
-          if (!tag) {
-            tag = "latest";
+          def tags = []
+          if (!env.TAG) {
+            tags.add(env.BRANCH_NAME)
+            withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
+              sh("""docker build --no-cache -t $docker_registry/$image_name:${it} .
+                    docker push $docker_registry/$image_name:${it}""")
+            }
           }
-          sh "docker build --no-cache -t $docker_registry/$image_name:$tag ."
-          withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
-            sh "docker push $docker_registry/$image_name:$tag"
+          else {
+            tags.addAll((env.TAG).split())
+            withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
+              sh("""docker build --no-cache -t $docker_registry/$image_name:latest .
+                    docker push $docker_registry/$image_name:latest""")
+              tags.each {
+                sh("""docker tag  $docker_registry/$image_name:latest $image_name:${it}
+                      docker push $docker_registry/$image_name:${it}""")
+              }
+            }
           }
         }
       }

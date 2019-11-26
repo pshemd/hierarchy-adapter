@@ -10,6 +10,7 @@ pipeline {
     image_name         = "ecp-lukoil/hierarchy-adapter"
     docker_registry    = "nexus2.zyfra.com:8082"
     docker_host_alias  = "nexus2.zyfra.com:192.168.101.190"
+    TAG = sh(returnStdout: true, script: "git tag --points-at \$(git rev-parse HEAD)").trim()
   }
 
   stages {

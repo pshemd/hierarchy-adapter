@@ -45,10 +45,9 @@ pipeline {
         script {
           def tags = []
           if (!env.TAG) {
-            tags.add(env.BRANCH_NAME)
             withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
-              sh("""docker build --no-cache -t $docker_registry/$image_name:${it} .
-                    docker push $docker_registry/$image_name:${it}""")
+              sh("""docker build --no-cache -t $docker_registry/$image_name:${env.BRANCH_NAME} .
+                    docker push $docker_registry/$image_name:${env.BRANCH_NAME}""")
             }
           }
           else {

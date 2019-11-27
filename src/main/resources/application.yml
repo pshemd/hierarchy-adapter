@@ -23,14 +23,7 @@ server:
 security:
   resource-id: "mdm-objects.application"
   oauth2:
-    client:
-      clientId: ${OAUTH2-CLIENT-ID:om-service}
-      clientSecret: ${OAUTH2-CLIENT-SECRET:c95911b2-d350-44e1-aab6-b3eacd46833b}
-      grantType: client_credentials
-      accessTokenUri: ${OAUTH2-CLIENT-TOKEN-URI:http://192.168.100.56:8080/auth/realms/master/protocol/openid-connect/token}
     resource:
-      userInfoUri: https://localhost:8443/cas/oauth2.0/profile
-      preferTokenInfo: false
       jwk:
         key-set-uri: ${JWKS_URL:http://192.168.100.56:8080/auth/realms/master/protocol/openid-connect/certs}
 

@@ -33,3 +33,8 @@ security:
       preferTokenInfo: false
       jwk:
         key-set-uri: ${JWKS_URL:http://192.168.100.56:8080/auth/realms/master/protocol/openid-connect/certs}
+
+mdm:
+  requests: "requests.json"
+  mapping: "mapping.json"
+

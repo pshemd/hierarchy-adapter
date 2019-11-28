@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.concurrent.CompletionStage;
 
@@ -31,7 +32,7 @@ public class ObjectsController implements ObjectsApi {
     }
 
     @Override
-    public CompletionStage<Page<Model>> getModels(@Valid Pageable pageable, @Valid Timestamp ts) {
+    public CompletionStage<Page<Model>> getModels(@Valid Pageable pageable, @Valid Timestamp ts) throws IOException {
 
         return modelRepository.getModels(pageable, ts)
                 .exceptionally(throwable -> {
@@ -40,7 +41,7 @@ public class ObjectsController implements ObjectsApi {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjects(@Valid String id, @Valid Pageable pageable, Boolean onlyRoot, @Valid Timestamp ts) {
+    public CompletionStage<Page<Object_>> getObjects(@Valid String id, @Valid Pageable pageable, Boolean onlyRoot, @Valid Timestamp ts) throws IOException {
 
         return objectsRepository.getObjects(id, pageable, false, ts)
                 .exceptionally(throwable -> {
@@ -49,7 +50,7 @@ public class ObjectsController implements ObjectsApi {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjectTree(@Valid String id, String objid, @Valid Pageable pageable, @Valid Timestamp ts) {
+    public CompletionStage<Page<Object_>> getObjectTree(@Valid String id, String objid, @Valid Pageable pageable, @Valid Timestamp ts) throws IOException {
 
         return objectsRepository.getObjectTree(id, objid, pageable, ts)
                 .exceptionally(throwable -> {
@@ -58,7 +59,7 @@ public class ObjectsController implements ObjectsApi {
     }
 
     @Override
-    public CompletionStage<Object_> getObject(String id, Timestamp ts) {
+    public CompletionStage<Object_> getObject(String id, Timestamp ts) throws IOException {
         return objectsRepository.getObject(id, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage());

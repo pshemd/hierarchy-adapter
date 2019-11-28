@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +30,7 @@ public class MdmModelRepository implements ModelRepository {
     }
 
     @Override
-    public CompletionStage<Page<Model>> getModels(Pageable pageable, Timestamp ts) {
+    public CompletionStage<Page<Model>> getModels(Pageable pageable, Timestamp ts) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getModels);
         var parameters = new HashMap<String, Object>();

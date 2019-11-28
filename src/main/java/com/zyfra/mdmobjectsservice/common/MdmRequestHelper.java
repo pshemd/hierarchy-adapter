@@ -1,22 +1,30 @@
 package com.zyfra.mdmobjectsservice.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zyfra.mdmclient.model.ClassDescription;
 import com.zyfra.mdmclient.model.MDMConfiguration;
 import com.zyfra.mdmclient.model.SetterDescription;
 import com.zyfra.mdmobjectsservice.model.Model;
 import com.zyfra.mdmobjectsservice.model.Object_;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
 @Component
 public class MdmRequestHelper {
+
+    @Value("${mdm.requests:requests.json}")
+    private String mdmRequest;
+
+    @Value("${mdm.mapping:mapping.json}")
+    private String mdmMapping;
 
     private ObjectMapper objectMapper;
 
@@ -24,11 +32,13 @@ public class MdmRequestHelper {
         this.objectMapper = new ObjectMapper();
     }
 
-    public MDMConfiguration getMdmConfiguration(Action action) {
+    public MDMConfiguration getMdmConfiguration(Action action) throws IOException {
 
-        var file = Paths.get("src", "main", "resources", "requests.json").toFile();
+        Resource resource = new ClassPathResource(mdmRequest);
+        InputStream inputStream = resource.getInputStream();
+
         try {
-            var configurationFromFile = objectMapper.readValue(file, new TypeReference<Map<String, MDMConfiguration>>() {
+            var configurationFromFile = objectMapper.readValue(inputStream, new TypeReference<Map<String, MDMConfiguration>>() {
             });
             switch (action) {
                 case getModels:
@@ -46,10 +56,13 @@ public class MdmRequestHelper {
         return null;
     }
 
-    public ClassDescription getMapping(Class clazz) {
+    public ClassDescription getMapping(Class clazz) throws IOException {
+
+        Resource resource = new ClassPathResource(mdmMapping);
+        InputStream inputStream = resource.getInputStream();
 
         try {
-            var mappingFromFile = objectMapper.readTree(Paths.get("src", "main", "resources", "mapping.json").toFile());
+            var mappingFromFile = objectMapper.readTree(inputStream);
             if (clazz.getName().equals(Model.class.getName())) {
 
                 var modelNode = mappingFromFile.path("Model");

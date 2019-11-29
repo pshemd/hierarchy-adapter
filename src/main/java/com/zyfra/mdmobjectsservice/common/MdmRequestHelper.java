@@ -39,6 +39,7 @@ public class MdmRequestHelper {
             case getChildObjects:
                 return mdmConfigurationMap.get("GET /models/{id}/objects/{objid}/objects");
             case getObject:
+                return mdmConfigurationMap.get("GET /objects/{id}");
             default:
                 return null;
         }

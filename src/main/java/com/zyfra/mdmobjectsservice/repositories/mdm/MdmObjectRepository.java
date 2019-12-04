@@ -83,10 +83,13 @@ public class MdmObjectRepository implements ObjectsRepository {
 
         return CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription))
                 .thenCombine(childCountFuture, (nativeObject, childCount) -> {
-                    var object = nativeObject.get(0);
-                    object.setModelId("PNOS");
-                    object.setChildsCount(childCount);
-                    return object;
+                    if (nativeObject.size() > 0) {
+                        var object = nativeObject.get(0);
+                        object.setModelId("PNOS");
+                        object.setChildsCount(childCount);
+                        return object;
+                    }
+                    return null; //TODO Add Exception Not found
                 });
     }
 

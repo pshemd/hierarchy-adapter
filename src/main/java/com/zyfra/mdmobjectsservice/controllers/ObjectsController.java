@@ -36,7 +36,7 @@ public class ObjectsController implements ObjectsApi {
 
         return modelRepository.getModels(pageable, ts)
                 .exceptionally(throwable -> {
-                    throw new RuntimeException(throwable.getMessage());
+                    throw new RuntimeException(throwable.getMessage(), throwable);
                 });
     }
 
@@ -45,7 +45,7 @@ public class ObjectsController implements ObjectsApi {
 
         return objectsRepository.getObjects(id, pageable, false, ts)
                 .exceptionally(throwable -> {
-                    throw new RuntimeException(throwable.getMessage());
+                    throw new RuntimeException(throwable.getMessage(), throwable);
                 });
     }
 
@@ -54,7 +54,7 @@ public class ObjectsController implements ObjectsApi {
 
         return objectsRepository.getObjectTree(id, objid, pageable, ts)
                 .exceptionally(throwable -> {
-                    throw new RuntimeException(throwable.getMessage());
+                    throw new RuntimeException(throwable.getMessage(), throwable);
                 });
     }
 
@@ -62,7 +62,7 @@ public class ObjectsController implements ObjectsApi {
     public CompletionStage<Object_> getObject(String id, Timestamp ts) throws IOException {
         return objectsRepository.getObject(id, ts)
                 .exceptionally(throwable -> {
-                    throw new RuntimeException(throwable.getMessage());
+                    throw new RuntimeException(throwable.getMessage(), throwable);
                 });
     }
 }

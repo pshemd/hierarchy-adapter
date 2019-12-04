@@ -8,7 +8,9 @@ import com.zyfra.mdmobjectsservice.repositories.ObjectsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -88,8 +90,8 @@ public class MdmObjectRepository implements ObjectsRepository {
                         object.setModelId("PNOS");
                         object.setChildsCount(childCount);
                         return object;
-                    }
-                    return null; //TODO Add Exception Not found
+                    } else
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Object %s not found", id));
                 });
     }
 

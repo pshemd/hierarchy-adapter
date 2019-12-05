@@ -31,3 +31,7 @@ mdm:
   requests: "requests.json"
   mapping: "mapping.json"
 
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: debug
+

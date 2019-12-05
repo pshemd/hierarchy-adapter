@@ -5,7 +5,6 @@ import com.zyfra.mdmobjectsservice.model.Object_;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +14,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 @Api(value = "models", description = "the objects API", tags = {"objects",})
@@ -83,6 +81,7 @@ public interface ObjectsApi {
             method = RequestMethod.GET)
     CompletionStage<Page<Object_>> getObjectTree(@ApiParam(value = "id модели", required = true) @Valid @PathVariable("id") String modelId
             , @ApiParam(value = "id объекта модели", required = true) @PathVariable("objid") String objectId
+            , @ApiParam(value = "признак необходимости расчета childCount", defaultValue = "true") @RequestParam(value = "isNeedChildrenCount", required = false, defaultValue = "true") Boolean isNeedChildCount
             , @ApiIgnore @Valid Pageable pageable
             , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 

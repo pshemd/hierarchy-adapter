@@ -50,9 +50,9 @@ public class ObjectsController implements ObjectsApi {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjectTree(@Valid String id, String objid, @Valid Pageable pageable, @Valid Timestamp ts) throws IOException {
+    public CompletionStage<Page<Object_>> getObjectTree(@Valid String id, String objid, Boolean isNeedChildCount, @Valid Pageable pageable, @Valid Timestamp ts) throws IOException {
 
-        return objectsRepository.getObjectTree(id, objid, pageable, ts)
+        return objectsRepository.getObjectTree(id, objid, isNeedChildCount, pageable, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage(), throwable);
                 });

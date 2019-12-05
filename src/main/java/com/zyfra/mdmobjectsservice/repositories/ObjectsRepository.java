@@ -11,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 public interface ObjectsRepository {
 
      CompletionStage<Page<Object_>> getObjects(String id, Pageable pageable, Boolean onlyRoot, Timestamp ts) throws IOException;
-     CompletionStage<Page<Object_>> getObjectTree(String id, String objid, Pageable pageable,Timestamp ts) throws IOException;
+     CompletionStage<Page<Object_>> getObjectTree(String id, String objid, Boolean isNeedChildCount, Pageable pageable,Timestamp ts) throws IOException;
      CompletionStage<Object_> getObject(String id, Timestamp ts) throws IOException;
 
 }

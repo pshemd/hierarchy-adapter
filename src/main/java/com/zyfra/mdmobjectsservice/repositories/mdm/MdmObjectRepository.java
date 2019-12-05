@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 @Repository
 public class MdmObjectRepository implements ObjectsRepository {
@@ -53,7 +54,7 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Pageable pageable, Timestamp ts) throws IOException {
+    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Boolean isNeedChildCount, Pageable pageable, Timestamp ts) throws IOException {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getChildObjects);
         var parameters = new HashMap<String, Object>();
@@ -63,13 +64,23 @@ public class MdmObjectRepository implements ObjectsRepository {
         var promise = new CompletableFuture<Page<Object_>>();
 
         //это объекты внутри дерева, атрибутом isPartOf у них заполняется parentId, а modelId зашиваем как "PNOS"
-        CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription))
-                .thenCompose(objects -> {
-                    objects.forEach(object -> object.setModelId("PNOS"));
-                    var setChildCountFutures = setChildCount(objects);
-                    return CompletableFuture.allOf(setChildCountFutures)
-                            .whenComplete((aVoid, throwable) -> promise.complete(new PageImpl<>(objects)));
-                });
+        var getObjectsFuture = CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription));
+
+        if (isNeedChildCount) {
+            getObjectsFuture
+                    .thenCompose(objects -> {
+                        objects.forEach(object -> object.setModelId("PNOS"));
+                        var setChildCountFutures = setChildCount(objects);
+                        return CompletableFuture.allOf(setChildCountFutures)
+                                .whenComplete((aVoid, throwable) -> promise.complete(new PageImpl<>(objects)));
+                    });
+        } else {
+            getObjectsFuture
+                    .thenApply(objects -> objects.stream().peek(object -> object.setModelId("PNOS")).collect(Collectors.toList()))
+                    .whenComplete((objects, throwable) -> promise.complete(new PageImpl<>(objects)));
+        }
+
+
         return promise;
     }
 
@@ -91,7 +102,7 @@ public class MdmObjectRepository implements ObjectsRepository {
                         object.setChildsCount(childCount);
                         return object;
                     } else
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Object %s not found", id));
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Object %s not found", id));
                 });
     }
 

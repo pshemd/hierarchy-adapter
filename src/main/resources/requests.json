@@ -14,5 +14,9 @@
   "GET /objects/{id}": {
     "url": "http://52.178.99.184/mdm/rest/",
     "request": "{\"EntityRequest\":{\"Endpoint\":\"lukoil\", \"Originator\":\"test\", \"Code\":\"<<<id>>>\"}}"
+  },
+  "GET /models/{id}/objects?onlyRoot=false": {
+    "url": "http://52.178.99.184/mdm/rest/",
+    "request": "{\"CatalogRequest\":{\"Endpoint\": \"lukoil\", \"Originator\": \"test\",\"ObjectType\": [{\"Code\": \"FunctionalLocation\"}],\"FilterGroup\": [{\"Operation\": \"and\",\"Filter\": [{\"Attribute\": \"relatedToRefinery\",\"Value\": \"PNOS\",\"Comparison\": \"equal\"}]}]}}"
   }
 }

@@ -10,7 +10,6 @@ import com.zyfra.mdmobjectsservice.model.Object_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -34,12 +33,14 @@ public class MdmRequestHelper {
         switch (action) {
             case getModels:
                 return mdmConfigurationMap.get("GET /models");
-            case getObjects:
+            case getRootObjects:
                 return mdmConfigurationMap.get("GET /models/{id}/objects");
             case getChildObjects:
                 return mdmConfigurationMap.get("GET /models/{id}/objects/{objid}/objects");
             case getObject:
                 return mdmConfigurationMap.get("GET /objects/{id}");
+            case getAllObjects:
+                return mdmConfigurationMap.get("GET /models/{id}/objects?onlyRoot=false");
             default:
                 return null;
         }

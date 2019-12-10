@@ -11,6 +11,6 @@
     "name": "$.Name",
     "description": "$.Name",
     "parentId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value",
-    "modelId": "$.Attribute[?(@.AttributeId=='isPartOf')].Value"
+    "modelId": "$.Attribute[?(@.AttributeId=='relatedToRefinery')].Value"
   }
 }

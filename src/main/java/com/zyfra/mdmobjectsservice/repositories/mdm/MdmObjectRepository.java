@@ -33,28 +33,44 @@ public class MdmObjectRepository implements ObjectsRepository {
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjects(String id, Pageable pageable, Boolean onlyRoot, Timestamp ts) throws IOException {
+    public CompletionStage<Page<Object_>> getObjects(String id, Pageable pageable, Boolean onlyRoot, Timestamp ts) {
 
-        var configuration = requestHelper.getMdmConfiguration(Action.getObjects);
-        var parameters = new HashMap<String, Object>();
-        var classDescription = requestHelper.getMapping(Object_.class);
+        if (onlyRoot) {
+            var configuration = requestHelper.getMdmConfiguration(Action.getRootObjects);
+            var parameters = new HashMap<String, Object>();
+            var classDescription = requestHelper.getMapping(Object_.class);
 
-        var promise = new CompletableFuture<Page<Object_>>();
+            var promise = new CompletableFuture<Page<Object_>>();
 
-        //это корневые объекты модели, атрибутом isPartOf у них заполняется modelId, а parentId обнуляем
-        CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription))
-                .thenCompose(objects -> {
-                    objects.forEach(object -> object.setParentId(null));
-                    var setChildCountFutures = setChildCount(objects);
-                    return CompletableFuture.allOf(setChildCountFutures)
-                            .whenComplete((aVoid, throwable) -> promise.complete(new PageImpl<>(objects)));
+            //это корневые объекты модели, атрибутом isPartOf у них заполняется modelId, а parentId обнуляем
+            CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription))
+                    .thenCompose(objects -> {
+                        objects.forEach(object -> object.setParentId(null));
+                        var setChildCountFutures = setChildCount(objects);
+                        return CompletableFuture.allOf(setChildCountFutures)
+                                .whenComplete((aVoid, throwable) -> promise.complete(new PageImpl<>(objects)));
 
-                });
-        return promise;
+                    });
+            return promise;
+        } else {
+            var configuration = requestHelper.getMdmConfiguration(Action.getAllObjects);
+            var parameters = new HashMap<String, Object>();
+            var classDescription = requestHelper.getMapping(Object_.class);
+
+            //у объектов с parentId=modelId='PNOS' обнуляем parentId т.к. это корневые объекты
+            return CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription))
+                    .thenApply(objects -> {
+                        objects.stream()
+                                .filter(object -> object.getModelId().equals(object.getParentId()))
+                                .forEach(object -> object.setParentId(null));
+                        return objects;
+                    })
+                    .thenApply(PageImpl::new);
+        }
     }
 
     @Override
-    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Boolean isNeedChildCount, Pageable pageable, Timestamp ts) throws IOException {
+    public CompletionStage<Page<Object_>> getObjectTree(String id, String objId, Boolean isNeedChildCount, Pageable pageable, Timestamp ts) {
 
         var configuration = requestHelper.getMdmConfiguration(Action.getChildObjects);
         var parameters = new HashMap<String, Object>();
@@ -63,7 +79,6 @@ public class MdmObjectRepository implements ObjectsRepository {
 
         var promise = new CompletableFuture<Page<Object_>>();
 
-        //это объекты внутри дерева, атрибутом isPartOf у них заполняется parentId, а modelId зашиваем как "PNOS"
         var getObjectsFuture = CompletableFuture.supplyAsync(() -> mdmAdapter.<Object_>call(configuration, parameters, classDescription));
 
         if (isNeedChildCount) {

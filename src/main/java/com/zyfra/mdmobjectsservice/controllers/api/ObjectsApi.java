@@ -40,7 +40,7 @@ public interface ObjectsApi {
             , @ApiParam(value = "ts") @Valid @RequestParam(value = "ts", required = false) Timestamp ts) throws IOException;
 
 
-    @ApiOperation(value = "Получить страницу всех объектов модели", nickname = "getObjects", notes = "", tags = {"objects",}, authorizations = {
+    @ApiOperation(value = "Получить страницу всех объектов модели", nickname = "getRootObjects", notes = "", tags = {"objects",}, authorizations = {
             @Authorization(value = "oauth2", scopes = {
 
             }),

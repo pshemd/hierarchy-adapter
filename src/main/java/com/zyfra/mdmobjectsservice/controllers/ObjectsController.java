@@ -43,7 +43,7 @@ public class ObjectsController implements ObjectsApi {
     @Override
     public CompletionStage<Page<Object_>> getObjects(@Valid String id, @Valid Pageable pageable, Boolean onlyRoot, @Valid Timestamp ts) throws IOException {
 
-        return objectsRepository.getObjects(id, pageable, false, ts)
+        return objectsRepository.getObjects(id, pageable, onlyRoot, ts)
                 .exceptionally(throwable -> {
                     throw new RuntimeException(throwable.getMessage(), throwable);
                 });

@@ -1,5 +1,5 @@
 package com.zyfra.mdmobjectsservice.common;
 
 public enum Action {
-    getModels, getObjects, getObject, getChildObjects
+    getModels, getRootObjects, getAllObjects, getObject, getChildObjects
 }

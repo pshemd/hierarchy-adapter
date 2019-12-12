@@ -34,8 +34,6 @@ pipeline {
               sh("""docker build --no-cache -t $image_name:dev .
                     docker push $image_name:dev""")
             }
-          }
-          
         }
       }
       post {

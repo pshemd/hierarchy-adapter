@@ -16,16 +16,16 @@ repositories {
 	/////mavenCentral()
 	maven {
 		name "nexus"
-		url "http://udp-portal-dev.lukoil.com/nexus/repository/maven-snapshots/"
+		url "http://udp-portal-dev.lukoil.com/nexus/repository/maven-releases/"
 	}
 }
 
 dependencies {
 
-	implementation ('com.zyfra:spring-runtime-exceptions:1.4-SNAPSHOT')
-	implementation ('com.zyfra:mdm-integration:1.0.9-SNAPSHOT')
+	implementation ('com.zyfra:spring-runtime-exceptions:1.4')
+	implementation ('com.zyfra:mdm-integration:1.0.9')
 
-	compile 'com.zyfra:spring-security:1.0-SNAPSHOT'
+	compile 'com.zyfra:spring-security:1.0'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'

@@ -7,22 +7,10 @@ pipeline {
     gitLabConnection('External Gitlab')
   }
   environment {
-    image_name         = "ecp-lukoil/hierarchy-adapter"
-    docker_registry    = "nexus2.zyfra.com:8082"
-    docker_host_alias  = "nexus2.zyfra.com:192.168.101.190"
-    TAG = sh(returnStdout: true, script: "git tag --points-at \$(git rev-parse HEAD)").trim()
+    image_name = "udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter"
   }
 
   stages {
-    stage('Dependency check') {
-      steps {
-        dependencycheck \
-          additionalArguments: '--scan . --out dependency-check-report.xml --format XML', 
-          odcInstallation: 'DepCheck5.2.1'
-        dependencyCheckPublisher \
-          pattern: 'dependency-check-report.xml'
-      }
-    }
     stage('Build') {
       steps {
         script {
@@ -33,8 +21,7 @@ pipeline {
               sh("""./gradlew build sonarqube \
                     -Dsonar.projectKey=`printf $image_name | sed 's|.*/||'` \
                     -Dsonar.projectName=`printf $image_name | sed 's|.*/||'` \
-                    -Dsonar.projectVersion=`git rev-parse --short HEAD` \
-                    -Dsonar.dependencyCheck.reportPath=$WORKSPACE/dependency-check-report.xml""")
+                    -Dsonar.projectVersion=`git rev-parse --short HEAD`""")
             }
           }
         }

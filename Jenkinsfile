@@ -15,13 +15,13 @@ pipeline {
       steps {
         script {
           docker.image('openjdk:11-jdk')
-                .inside("--add-host $docker_host_alias") {
+                .inside() {
             sh 'chmod +x ./gradlew'
-            withSonarQubeEnv('SonarQ') {
+            withSonarQubeEnv('SonarQube') {
               sh("""./gradlew build sonarqube \
-                    -Dsonar.projectKey=`printf $image_name | sed 's|.*/||'` \
-                    -Dsonar.projectName=`printf $image_name | sed 's|.*/||'` \
-                    -Dsonar.projectVersion=`git rev-parse --short HEAD`""")
+                    -Dsonar.projectKey=hierarchy-adapter \
+                    -Dsonar.projectName=hierarchy-adapter \
+                    -Dsonar.projectVersion=1.0""")
             }
           }
         }
@@ -30,24 +30,12 @@ pipeline {
     stage('Build docker image and push') {
       steps {
         script {
-          def tags = []
-          if (!env.TAG) {
-            withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
-              sh("""docker build --no-cache -t $docker_registry/$image_name:${env.BRANCH_NAME} .
-                    docker push $docker_registry/$image_name:${env.BRANCH_NAME}""")
+            withDockerRegistry([credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', url: 'http://udp-portal-dev.lukoil.com/nexus']) {
+              sh("""docker build --no-cache -t $image_name:dev .
+                    docker push $image_name:dev""")
             }
           }
-          else {
-            tags.addAll((env.TAG).split())
-            withDockerRegistry([credentialsId: 'nexus2-docker', url: 'http://$docker_registry']) {
-              sh("""docker build --no-cache -t $docker_registry/$image_name:latest .
-                    docker push $docker_registry/$image_name:latest""")
-              tags.each {
-                sh("""docker tag  $docker_registry/$image_name:latest $image_name:${it}
-                      docker push $docker_registry/$image_name:${it}""")
-              }
-            }
-          }
+          
         }
       }
       post {

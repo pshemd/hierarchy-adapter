@@ -13,6 +13,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
+        sh 'echo start'
         script {
           docker.image('openjdk:11-jdk')
                 .inside() {

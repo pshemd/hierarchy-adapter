@@ -4,7 +4,7 @@ pipeline {
     timeout(time: 30, unit: 'MINUTES')
     buildDiscarder(logRotator(numToKeepStr: '5'))
     disableConcurrentBuilds()
-    gitLabConnection('External Gitlab')
+    gitLabConnection('GitLab')
   }
   environment {
     image_name = "udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter"

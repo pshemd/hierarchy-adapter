@@ -7,7 +7,7 @@ pipeline {
     gitLabConnection('GitLab')
   }
   environment {
-    image_name = "udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter"
+    image_name = "10.0.0.5:8088/ecp-lukoil/hierarchy-adapter"
   }
 
   stages {

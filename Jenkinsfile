@@ -47,6 +47,13 @@ pipeline {
       }
     }
   }
+  stage('Update service') {
+                    steps {
+                        sshagent(['jenkins_ssh']) {
+                            sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0. ""'
+                        }    
+                    }
+                }
   post {
     failure {
       updateGitlabCommitStatus name: 'Jenkins build', state: 'failed'

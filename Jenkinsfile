@@ -13,9 +13,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'echo start'
         script {
-          /*docker.image('openjdk:11-jdk')
+          docker.image('openjdk:11-jdk')
                 .inside() {
             sh 'chmod +x ./gradlew'
             withSonarQubeEnv('SonarQube') {
@@ -24,9 +23,6 @@ pipeline {
                     -Dsonar.projectName=hierarchy-adapter \
                     -Dsonar.projectVersion=1.0""")
             }
-          }*/
-          docker.image('alpine').inside() {
-            sh 'echo inner'
           }
         }
       }

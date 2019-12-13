@@ -18,10 +18,12 @@ pipeline {
                 .inside() {
             sh 'chmod +x ./gradlew'
             withSonarQubeEnv('SonarQube') {
-              sh("""./gradlew build sonarqube \
-                    -Dsonar.projectKey=hierarchy-adapter \
-                    -Dsonar.projectName=hierarchy-adapter \
-                    -Dsonar.projectVersion=1.0""")
+                withCredentials([usernamePassword(credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
+                  sh("""./gradlew -DNEXUS_PASSWORD=$NEXUS_PASSWORD -DNEXUS_USER=$NEXUS_USER build sonarqube \
+                        -Dsonar.projectKey=hierarchy-adapter \
+                        -Dsonar.projectName=hierarchy-adapter \
+                        -Dsonar.projectVersion=1.0""")
+                }
             }
           }
         }

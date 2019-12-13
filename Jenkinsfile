@@ -30,7 +30,7 @@ pipeline {
     stage('Build docker image and push') {
       steps {
         script {
-            withDockerRegistry([credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', url: 'http://udp-portal-dev.lukoil.com/nexus']) {
+            withDockerRegistry([credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', url: '10.0.0.5:8088']) {
               sh("""docker build --no-cache -t $image_name:dev .
                     docker push $image_name:dev""")
             }

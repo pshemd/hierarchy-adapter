@@ -20,7 +20,7 @@ pipeline {
             withSonarQubeEnv('SonarQube') {
                 //withCredentials([usernamePassword(credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
                     sh """
-                    ./gradlew build sonarqube \
+                    ./gradlew -Puser='admin' -Ppassword='FPJIOUW#(*uHU*WYO#RQWlrh' build sonarqube \
                     -Dsonar.projectKey=hierarchy-adapter \
                     -Dsonar.projectName=hierarchy-adapter \
                     -Dsonar.projectVersion=1.0

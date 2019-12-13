@@ -46,14 +46,15 @@ pipeline {
         }
       }
     }
-  }
-  stage('Update service') {
-                    steps {
-                        sshagent(['jenkins_ssh']) {
-                            sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0. "jenkins-patch ecp-lukoil/hierarchy-adapter:dev"'
-                        }    
+  
+      stage('Update service') {
+                        steps {
+                            sshagent(['jenkins_ssh']) {
+                                sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0. "jenkins-patch ecp-lukoil/hierarchy-adapter:dev"'
+                            }    
+                        }
                     }
-                }
+    }
   post {
     failure {
       updateGitlabCommitStatus name: 'Jenkins build', state: 'failed'

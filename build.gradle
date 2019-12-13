@@ -15,6 +15,10 @@ targetCompatibility = 11
 repositories {
 	/////mavenCentral()
 	maven {
+        credentials {  
+            username getProperty('user') 
+            password getProperty('password') 
+        } 
 		name "nexus"
 		url "http://udp-portal-dev.lukoil.com/nexus/repository/maven-releases/"
 	}

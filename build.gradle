@@ -15,12 +15,12 @@ targetCompatibility = 11
 repositories {
 	mavenCentral()
 	maven {
-        credentials {  
-            username project.user
-            password project.password 
-        } 
+        //credentials {  
+        //    username project.user
+        //    password project.password 
+        //} 
 		name "nexus"
-		url "http://udp-portal-dev.lukoil.com/nexus/repository/maven-releases/"
+		url "http://nexus2.zyfra.com/repository/maven-public/"
 	}
 }
 

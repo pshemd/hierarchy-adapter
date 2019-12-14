@@ -10,6 +10,10 @@
 [![Security Rating](http://udp-portal-dev.lukoil.com/sonarqube/api/project_badges/measure?project=hierarchy-adapter&metric=security_rating)](http://udp-portal-dev.lukoil.com/sonarqube/dashboard?id=hierarchy-adapter)
 [![Technical Debt](http://udp-portal-dev.lukoil.com/sonarqube/api/project_badges/measure?project=hierarchy-adapter&metric=sqale_index)](http://udp-portal-dev.lukoil.com/sonarqube/dashboard?id=hierarchy-adapter)
 [![Vulnerabilities](http://udp-portal-dev.lukoil.com/sonarqube/api/project_badges/measure?project=hierarchy-adapter&metric=vulnerabilities)](http://udp-portal-dev.lukoil.com/sonarqube/dashboard?id=hierarchy-adapter)
+
+[ UI Testing dasboard <img src="http://www.cesarchavez.me/blog/wp-content/themes/cesarchavez/media/icon_test.png"  width="60">](http://104.46.49.208:8080/#/)
+
+
 ---
 ### Variables:
 

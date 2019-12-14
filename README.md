@@ -11,8 +11,18 @@
 [![Technical Debt](http://udp-portal-dev.lukoil.com/sonarqube/api/project_badges/measure?project=hierarchy-adapter&metric=sqale_index)](http://udp-portal-dev.lukoil.com/sonarqube/dashboard?id=hierarchy-adapter)
 [![Vulnerabilities](http://udp-portal-dev.lukoil.com/sonarqube/api/project_badges/measure?project=hierarchy-adapter&metric=vulnerabilities)](http://udp-portal-dev.lukoil.com/sonarqube/dashboard?id=hierarchy-adapter)
 
-[ UI Testing dasboard <img src="http://www.cesarchavez.me/blog/wp-content/themes/cesarchavez/media/icon_test.png"  width="60">](http://104.46.49.208:8080/#/)
 
+[![UI Tests Dasboard](https://img.shields.io/badge/selenoid-UI%20Tests%20Dasboard-informational)](http://104.46.49.208:8080/#/).
+[![UI Tests Dasboard](https://img.shields.io/badge/selenoid-stats-inactive)](http://udp-portal-dev.lukoil.com/selenoid/status)
+
+[![Sonatype Nexus](https://img.shields.io/badge/nexus-dev-green)](http://udp-portal-dev.lukoil.com/nexus/#browse/browse:docker-hosted:v2%2Fecp-lukoil%2Fhierarchy-adapter%2Ftags%2Fdev)
+
+---
+### Pull image
+
+```bash
+docker pull http://udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter:dev
+```
 
 ---
 ### Variables:

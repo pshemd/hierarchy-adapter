@@ -18,14 +18,12 @@ pipeline {
                 .inside() {
             sh 'chmod +x ./gradlew'
             withSonarQubeEnv('SonarQube') {
-                //withCredentials([usernamePassword(credentialsId: '94beadb1-b0d5-4c27-952c-d77616c5288d', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
-                    sh """
-                    ./gradlew --stacktrace -Puser='admin' -Ppassword='FPJIOUW#(*uHU*WYO#RQWlrh' build sonarqube \
-                    -Dsonar.projectKey=hierarchy-adapter \
-                    -Dsonar.projectName=hierarchy-adapter \
-                    -Dsonar.projectVersion=1.0
-                    """
-                //}
+              sh """
+              ./gradlew --stacktrace -Puser='admin' -Ppassword='FPJIOUW#(*uHU*WYO#RQWlrh' build sonarqube \
+              -Dsonar.projectKey=hierarchy-adapter \
+              -Dsonar.projectName=hierarchy-adapter \
+              -Dsonar.projectVersion=1.0
+              """
             }
           }
         }
@@ -46,14 +44,20 @@ pipeline {
         }
       }
     }
-  
-      stage('Update service') {
-                        steps {
-                            sshagent(['jenkins_ssh']) {
-                                sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0.20 "jenkins-patch ecp-lukoil/hierarchy-adapter:dev"'
-                            }    
-                        }
-                    }
+    stage('Update service') {
+      steps {
+        sshagent(['jenkins_ssh']) {
+          sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0.20 "jenkins-patch ecp-lukoil/hierarchy-adapter:dev"'
+        }    
+      }
+    }
+    stage('UI tests') {
+      steps {
+        sshagent(['jenkins_ssh']) {
+          sh 'ssh -o StrictHostKeyChecking=no -tt root@10.0.0.11 "bash /opt/ui/run.sh"'
+        }    
+      }
+    }
     }
   post {
     failure {

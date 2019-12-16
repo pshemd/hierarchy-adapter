@@ -22,7 +22,6 @@
 
 ```bash
 docker pull http://udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter:dev
-test
 ```
 
 ---

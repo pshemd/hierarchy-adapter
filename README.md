@@ -31,7 +31,7 @@ docker pull http://udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter:
 #### Swager autorize
 * `AUTH_SERVER_URL` - http://udp-portal-dev.lukoil.com/auth
 * `REALM` - master
-* `CLIENT` - portal
+* `CLIENT` - portal1
 
 #### Publish
 * `LOCAL_PORT` - 8096

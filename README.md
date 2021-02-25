@@ -34,7 +34,7 @@ docker pull http://udp-portal-dev.lukoil.com/nexus/ecp-lukoil/hierarchy-adapter:
 * `CLIENT` - portal
 
 #### Publish
-* `LOCAL_PORT` - 8098
+* `LOCAL_PORT` - 8097
 
 #### OpenID
 * `OAUTH2-CLIENT-ID` - om-service
